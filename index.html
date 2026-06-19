@@ -4,19 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LPC Day 1 Knowledge Check</title>
+<link rel="icon" type="image/png" href="assets/lpc_crest_gold.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --navy:#0E2A4E; --navy-2:#0B2240; --navy-deep:#081A33;
-    --gold:#D6A012; --gold-bright:#F2B705; --gold-soft:#E8C766;
-    --cream:#FBF4DD; --cream-line:#E9D8A6;
-    --ink:#15294A; --slate:#5C6B82; --slate-2:#7C89A0;
-    --paper:#EEF2F6; --white:#FFFFFF;
-    --ok:#2E7D52; --ok-bg:#E7F2EC; --no:#B5403A; --no-bg:#F8EAE9;
-    --line:#E2E7EE;
-    --shadow:0 10px 30px rgba(8,26,51,.10);
-    --shadow-lg:0 24px 60px rgba(8,26,51,.22);
-    --font:'Montserrat','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;
-    --serif:'Georgia','Times New Roman',serif;
+    /* Official London Premier Centre brand palette (lpcbeamer.sty) */
+    --navy:#002850; --navy-2:#04386B; --navy-deep:#001A36;
+    --gold:#FFC000; --gold-bright:#FFC000; --gold-deep:#C8960C; --gold-soft:#E8C766;
+    --cream:#FFF7DC; --cream-line:#F0DEA8;
+    --ink:#1B2733; --slate:#5A6B7B; --slate-2:#8593A3;
+    --paper:#EEF2F6; --mist2:#F7F9FB; --white:#FFFFFF;
+    --ok:#1E7B4F; --ok-bg:#E7F2EC; --no:#B3261E; --no-bg:#F8EAE9;
+    --line:#D7DEE6;
+    --shadow:0 10px 30px rgba(0,26,54,.10);
+    --shadow-lg:0 24px 60px rgba(0,26,54,.22);
+    --font:'Lato','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;
+    --display:'Montserrat','Segoe UI',system-ui,-apple-system,Arial,sans-serif;
+    --serif:'Montserrat','Georgia',serif;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   html,body{height:100%;}
@@ -24,13 +30,30 @@
   #app{min-height:100vh;}
   :focus-visible{outline:3px solid var(--gold-bright);outline-offset:2px;border-radius:6px;}
 
+  /* Brand type: Montserrat (display) on headings/labels; Lato carries body prose */
+  .home-eyebrow,.home-title,.home-title .sub,.mc-tag,.mode-card h3,.tb-word,.tb-mode,
+  .q-module,.q-title,.btn,.conf-btn,.opt-letter,.kbd,
+  .res-headtext h2,.band-name,.rn-top b,.rn-den,.rn-lab,
+  .gain-txt b,.gain-big,.gain-txt .gt-main,
+  .panel h3,.ctable th,.cpill,.mx-cell .n,.mx-h,.mx-rh,
+  .ct-h,.priority-line .pl-h,.bd-mod{font-family:var(--display);}
+
+  /* Official LPC heraldic logo lockups (raster brand assets) */
+  .lpc-logo{display:inline-flex;align-items:center;}
+  .lpc-logo img{display:block;width:auto;}
+  .lpc-logo-lg img{height:54px;}
+  .lpc-logo-sm img{height:30px;}
+  .lpc-logo .lpc-logo-gold{display:none;}
+  .home .lpc-logo,.res-hero .lpc-logo{margin-bottom:28px;}
+  .tb-crest{height:28px;width:auto;display:block;}
+
   .container{width:100%;max-width:840px;margin:0 auto;padding:0 22px;}
   .btn{cursor:pointer;border:none;border-radius:11px;font-family:var(--font);font-weight:700;font-size:15px;padding:13px 24px;transition:.18s ease;display:inline-flex;align-items:center;gap:8px;}
   .btn-primary{background:var(--gold);color:var(--navy);}
-  .btn-primary:hover{background:var(--gold-bright);transform:translateY(-1px);box-shadow:0 8px 20px rgba(214,160,18,.32);}
+  .btn-primary:hover{background:var(--gold-bright);transform:translateY(-1px);box-shadow:0 8px 20px rgba(255,192,0,.32);}
   .btn-primary:disabled{background:#D6DCE4;color:#9AA6B5;cursor:not-allowed;transform:none;box-shadow:none;}
   .btn-ghost{background:transparent;color:var(--navy);border:1.5px solid #C9D2DD;}
-  .btn-ghost:hover{border-color:var(--gold);color:var(--gold);background:#fff;}
+  .btn-ghost:hover{border-color:var(--gold);color:var(--gold-deep);background:#fff;}
   .linkbtn{background:none;border:none;color:var(--slate);font-family:var(--font);font-size:13px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
   .linkbtn:hover{color:var(--no);}
 
@@ -47,12 +70,11 @@
 
   /* ---------- HOME ---------- */
   .home{min-height:100vh;background:
-      radial-gradient(1100px 600px at 85% -10%, rgba(242,183,5,.10), transparent 60%),
+      radial-gradient(1100px 600px at 85% -10%, rgba(255,192,0,.10), transparent 60%),
       linear-gradient(160deg,var(--navy) 0%, var(--navy-2) 55%, var(--navy-deep) 100%);
       color:#fff;position:relative;overflow:hidden;display:flex;align-items:center;padding:48px 0;}
-  .watermark{position:absolute;color:var(--gold);opacity:.05;pointer-events:none;}
-  .wm-1{top:-50px;right:-110px;}
-  .wm-1 svg{width:560px;height:auto;}
+  .watermark{position:absolute;opacity:.06;pointer-events:none;}
+  .wm-1{top:-40px;right:-120px;width:520px;height:auto;}
   .home .lockup{margin-bottom:34px;}
   .home-eyebrow{color:var(--gold-bright);font-size:13px;letter-spacing:.2em;font-weight:800;text-transform:uppercase;position:relative;}
   .home-eyebrow:after{content:"";display:block;width:46px;height:3px;background:var(--gold-bright);border-radius:2px;margin-top:12px;}
@@ -65,7 +87,7 @@
   .meta>div span{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-soft);font-weight:700;margin-bottom:3px;}
   .mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:34px;}
   .mode-card{background:rgba(255,255,255,.045);border:1.5px solid rgba(255,255,255,.14);border-radius:18px;padding:26px 24px;cursor:pointer;transition:.2s ease;text-align:left;position:relative;overflow:hidden;}
-  .mode-card:hover{border-color:var(--gold);background:rgba(242,183,5,.07);transform:translateY(-3px);box-shadow:var(--shadow-lg);}
+  .mode-card:hover{border-color:var(--gold);background:rgba(255,192,0,.07);transform:translateY(-3px);box-shadow:var(--shadow-lg);}
   .mode-card .mc-tag{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:800;color:var(--gold-bright);}
   .mode-card h3{font-size:24px;font-weight:800;margin:8px 0 4px;color:#fff;}
   .mode-card p{font-size:13.5px;color:#AEBBCE;min-height:38px;}
@@ -85,7 +107,7 @@
   .topbar-inner{max-width:840px;margin:0 auto;padding:13px 22px;display:flex;align-items:center;gap:14px;}
   .tb-word{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--gold);white-space:nowrap;}
   .tb-mode{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;padding:5px 11px;border-radius:30px;}
-  .tb-mode.pre{background:rgba(242,183,5,.16);color:var(--gold-bright);}
+  .tb-mode.pre{background:rgba(255,192,0,.16);color:var(--gold-bright);}
   .tb-mode.post{background:rgba(255,255,255,.12);color:#fff;}
   .tb-right{margin-left:auto;display:flex;align-items:center;gap:16px;}
   .tb-timer{font-size:13px;color:#B7C3D6;font-weight:600;font-variant-numeric:tabular-nums;display:inline-flex;align-items:center;gap:6px;}
@@ -102,23 +124,23 @@
   .qcard.anim{animation:fade .35s ease;}
   @keyframes fade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
   .qcard-top{padding:26px 30px 4px;border-left:5px solid var(--gold);}
-  .q-module{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--gold);}
+  .q-module{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--gold-deep);}
   .q-head{font-size:13px;color:var(--slate-2);font-weight:700;margin-top:4px;letter-spacing:.02em;}
   .q-title{font-size:23px;font-weight:800;color:var(--navy);margin:10px 0 14px;line-height:1.2;}
   .q-prompt{font-size:16.5px;color:var(--ink);padding:0 30px;}
   .options{padding:18px 30px 8px;display:flex;flex-direction:column;gap:11px;}
   .option{display:flex;align-items:flex-start;gap:14px;border:1.6px solid var(--line);border-radius:13px;padding:15px 17px;cursor:pointer;transition:.16s ease;background:#fff;text-align:left;font-family:var(--font);width:100%;position:relative;}
   .option:hover{border-color:var(--gold-soft);background:#FFFCF3;}
-  .option.selected{border-color:var(--gold);background:var(--cream);box-shadow:0 3px 14px rgba(214,160,18,.16);}
+  .option.selected{border-color:var(--gold);background:var(--cream);box-shadow:0 3px 14px rgba(255,192,0,.16);}
   .opt-letter{flex:none;width:30px;height:30px;border-radius:9px;background:#EEF2F6;color:var(--navy);font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;transition:.16s;margin-top:1px;}
   .option.selected .opt-letter{background:var(--gold);color:var(--navy);}
   .opt-text{font-size:15px;color:var(--ink);line-height:1.45;flex:1;}
-  .opt-check{position:absolute;top:14px;right:15px;color:var(--gold);font-weight:800;font-size:18px;opacity:0;transform:scale(.6);transition:.16s;}
+  .opt-check{position:absolute;top:14px;right:15px;color:var(--gold-deep);font-weight:800;font-size:18px;opacity:0;transform:scale(.6);transition:.16s;}
   .option.selected .opt-check{opacity:1;transform:scale(1);}
 
   .conf{margin:14px 30px 4px;background:#F7F9FB;border:1px solid var(--line);border-radius:13px;padding:16px 18px;}
   .conf-label{font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;color:var(--slate);display:flex;align-items:center;gap:8px;}
-  .conf-label svg{width:14px;height:14px;color:var(--gold);}
+  .conf-label svg{width:14px;height:14px;color:var(--gold-deep);}
   .conf-scale{display:flex;gap:8px;margin-top:12px;}
   .conf-btn{flex:1;border:1.6px solid var(--line);background:#fff;border-radius:10px;padding:11px 0;font-weight:800;font-size:16px;color:var(--navy);cursor:pointer;transition:.15s;font-family:var(--font);}
   .conf-btn:hover{border-color:var(--gold-soft);}
@@ -135,7 +157,7 @@
   /* ---------- RESULTS ---------- */
   .results{min-height:100vh;background:var(--paper);padding-bottom:60px;}
   .res-hero{background:
-      radial-gradient(900px 500px at 90% -20%, rgba(242,183,5,.10), transparent 60%),
+      radial-gradient(900px 500px at 90% -20%, rgba(255,192,0,.10), transparent 60%),
       linear-gradient(160deg,var(--navy) 0%, var(--navy-2) 70%, var(--navy-deep) 100%);
       color:#fff;padding:32px 0 40px;position:relative;overflow:hidden;}
   .res-hero .lockup{margin-bottom:26px;}
@@ -154,7 +176,7 @@
   .res-body{padding:30px 0 0;}
   .panel{background:#fff;border-radius:18px;box-shadow:var(--shadow);border:1px solid var(--line);padding:24px 26px;margin-bottom:18px;animation:rise .5s ease both;}
   @keyframes rise{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
-  .panel h3{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:800;margin-bottom:4px;}
+  .panel h3{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-deep);font-weight:800;margin-bottom:4px;}
   .panel .ph-sub{color:var(--slate);font-size:14px;margin-bottom:16px;}
 
   .gain-banner{display:flex;align-items:center;gap:24px;background:linear-gradient(135deg,var(--navy),var(--navy-2));color:#fff;border-radius:18px;padding:26px 28px;margin-bottom:18px;box-shadow:var(--shadow);flex-wrap:wrap;animation:rise .5s ease both;}
@@ -225,7 +247,7 @@
   .bd-explain .trap b{color:var(--no);}
 
   .callout{background:var(--cream);border-left:5px solid var(--gold);border-radius:0 12px 12px 0;padding:16px 18px;margin-bottom:18px;animation:rise .5s ease both;}
-  .callout .ct-h{font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:var(--gold);display:flex;align-items:center;gap:8px;}
+  .callout .ct-h{font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:var(--gold-deep);display:flex;align-items:center;gap:8px;}
   .callout .ct-h svg{width:15px;height:15px;}
   .callout p{font-size:14.5px;color:var(--ink);margin-top:7px;line-height:1.55;}
 
@@ -265,8 +287,9 @@
     .gain-banner{background:#fff!important;color:var(--navy)!important;border:1.5px solid var(--gold);box-shadow:none;}
     .gain-txt b{color:#8a6d00!important;} .gain-txt .gt-main{color:var(--navy)!important;} .gain-txt p{color:#333!important;}
     .panel,.callout{box-shadow:none;border:1px solid #ccc;break-inside:avoid;animation:none;}
-    .lpc-word b,.lpc-word .rule{color:var(--gold)!important;}
-    .crest svg,.ring-wrap svg{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .lpc-logo .lpc-logo-white{display:none!important;}
+    .lpc-logo .lpc-logo-gold{display:block!important;}
+    .lpc-logo img,.ring-wrap svg{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
     @page{margin:13mm;}
   }
 </style>
@@ -283,52 +306,14 @@ const STORAGE_KEY = "lpc-mldl1149-augustine-assessment";
 let memoryFallback = null;
 let appResults = {};
 
-/* ---------------- LPC crest (heraldic SVG recreation) --------------- */
-const LION = `
-  <path d="M16 56 C5 50 2 36 7 26 C9 21 15 19 18 25" fill="none" stroke="#D6A012" stroke-width="6" stroke-linecap="round"/>
-  <circle cx="6.5" cy="26" r="4.5"/>
-  <path d="M32 96 C26 96 23 91 22 85 L21 68 C20 58 22 49 30 45 C37 42 42 47 42 56 L43 76 C44 86 41 96 35 96 Z"/>
-  <path d="M40 46 C46 50 48 58 46 66 L48 80 C48 84 45 86 42 84 C41 74 38 60 38 50 Z"/>
-  <path d="M40 36 C47 31 54 30 55 25 C56 22 53 20 50 22 C46 25 42 30 37 34 Z"/>
-  <path d="M34 30 C33 36 35 42 40 44 C44 42 46 38 45 32 Z"/>
-  <circle cx="39" cy="22" r="10"/>
-  <path d="M47 17 L57 22 L47 28 Z"/>
-  <path d="M46 25 L55 27 L46 31 Z"/>
-  <path d="M41 9 L47 12 L40 15 Z"/>
-  <path d="M31 10 L37 15 L29 18 Z"/>
-  <path d="M30 20 L37 23 L29 27 Z"/>
-  <path d="M31 30 L38 32 L30 36 Z"/>`;
-
-function crestSVG(){
-  return `<svg viewBox="0 0 220 250" xmlns="http://www.w3.org/2000/svg" aria-label="London Premier Centre crest">
-    <path d="M110 10 L204 44 V124 C204 184 166 218 110 244 C54 218 16 184 16 124 V44 Z" fill="#FFFFFF" stroke="#D6A012" stroke-width="10" stroke-linejoin="round"/>
-    <path d="M110 23 L194 53 V123 C194 178 160 209 110 231 C60 209 26 178 26 123 V53 Z" fill="none" stroke="#D6A012" stroke-width="2.4"/>
-    <g fill="#D6A012">
-      <path d="M74 74 L80 66 L82 52 L84 66 L92 64 L96 48 L100 64 L106 62 L110 38 L114 62 L120 64 L124 48 L128 64 L136 66 L138 52 L140 66 L146 74 Z"/>
-      <circle cx="82" cy="50" r="4"/><circle cx="96" cy="46" r="4"/><circle cx="124" cy="46" r="4"/><circle cx="138" cy="50" r="4"/><circle cx="110" cy="36" r="4.5"/>
-      <rect x="76" y="74" width="68" height="8" rx="1"/>
-    </g>
-    <g fill="#D6A012" transform="translate(34,80) scale(0.98)">${LION}</g>
-    <g fill="#D6A012" transform="translate(186,80) scale(-0.98,0.98)">${LION}</g>
-    <g fill="#D6A012">
-      <circle cx="110" cy="106" r="9"/><circle cx="100" cy="116" r="8"/><circle cx="120" cy="116" r="8"/>
-      <path d="M110 118 L116 124 L110 142 L104 124 Z"/>
-    </g>
-    <g fill="#D6A012">
-      <path d="M110 150 L142 168 H78 Z"/>
-      <rect x="77" y="170" width="66" height="6"/>
-      <rect x="86" y="178" width="7" height="22"/><rect x="99" y="178" width="7" height="22"/><rect x="112" y="178" width="7" height="22"/><rect x="125" y="178" width="7" height="22"/>
-      <rect x="78" y="200" width="64" height="6"/>
-      <rect x="74" y="206" width="72" height="7"/>
-    </g>
-  </svg>`;
-}
+/* LPC crest & wordmark use the official raster brand assets in /assets
+   (lpc_logo_white.png, lpc_logo_gold.png, lpc_crest_white.png) — see lockupHTML. */
 function lockupHTML(size){
-  const cls = size==="sm" ? "crest-sm" : "crest-lg";
-  return `<div class="lockup">
-    <span class="crest ${cls}">${crestSVG()}</span>
-    <span class="lpc-word"><b>London Premier Centre</b><i class="rule"></i><span>UK Training Provider</span></span>
-  </div>`;
+  const cls = size==="sm" ? "lpc-logo-sm" : "lpc-logo-lg";
+  return `<span class="lpc-logo ${cls}">
+    <img class="lpc-logo-white" src="assets/lpc_logo_white.png" alt="London Premier Centre">
+    <img class="lpc-logo-gold" src="assets/lpc_logo_gold.png" alt="London Premier Centre">
+  </span>`;
 }
 
 const penSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/></svg>';
@@ -498,7 +483,7 @@ function modeCardHTML(mode){
 
 function homeHTML(){
   return `<div class="home">
-    <div class="watermark wm-1 crest">${crestSVG()}</div>
+    <img class="watermark wm-1" src="assets/lpc_crest_white.png" alt="">
     <div class="container">
       ${lockupHTML("lg")}
       <div class="home-eyebrow">Executive Programme · Day 1 Knowledge Check</div>
@@ -533,7 +518,7 @@ function quizHTML(){
   return `<div class="quiz">
     <div class="topbar">
       <div class="topbar-inner">
-        <span class="crest crest-sm">${crestSVG()}</span>
+        <img class="tb-crest" src="assets/lpc_crest_white.png" alt="LPC">
         <span class="tb-word">London Premier Centre</span>
         <span class="tb-mode ${state.mode}">${isPost?"Post-Test":"Pre-Test"}</span>
         <div class="tb-right">
@@ -570,7 +555,7 @@ function quizHTML(){
 function ringHTML(){
   return `<div class="ring-wrap"><svg viewBox="0 0 140 140" width="140" height="140">
       <circle cx="70" cy="70" r="60" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="12"/>
-      <circle id="scoreArc" cx="70" cy="70" r="60" fill="none" stroke="#F2B705" stroke-width="12" stroke-linecap="round" stroke-dasharray="0 377" transform="rotate(-90 70 70)"/>
+      <circle id="scoreArc" cx="70" cy="70" r="60" fill="none" stroke="#FFC000" stroke-width="12" stroke-linecap="round" stroke-dasharray="0 377" transform="rotate(-90 70 70)"/>
     </svg>
     <div class="ring-num"><div class="rn-top"><b id="scoreNum">0</b><span class="rn-den">/6</span></div><span class="rn-lab">SCORE</span></div></div>`;
 }
