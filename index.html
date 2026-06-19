@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LPC Day 1 Knowledge Check</title>
+<style>
+  :root{
+    --navy:#0E2A4E; --navy-2:#0B2240; --navy-deep:#081A33;
+    --gold:#D6A012; --gold-bright:#F2B705; --gold-soft:#E8C766;
+    --cream:#FBF4DD; --cream-line:#E9D8A6;
+    --ink:#15294A; --slate:#5C6B82; --slate-2:#7C89A0;
+    --paper:#EEF2F6; --white:#FFFFFF;
+    --ok:#2E7D52; --ok-bg:#E7F2EC; --no:#B5403A; --no-bg:#F8EAE9;
+    --line:#E2E7EE;
+    --shadow:0 10px 30px rgba(8,26,51,.10);
+    --shadow-lg:0 24px 60px rgba(8,26,51,.22);
+    --font:'Montserrat','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;
+    --serif:'Georgia','Times New Roman',serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{font-family:var(--font);color:var(--ink);background:var(--paper);-webkit-font-smoothing:antialiased;line-height:1.5;}
+  #app{min-height:100vh;}
+  :focus-visible{outline:3px solid var(--gold-bright);outline-offset:2px;border-radius:6px;}
+
+  .container{width:100%;max-width:840px;margin:0 auto;padding:0 22px;}
+  .btn{cursor:pointer;border:none;border-radius:11px;font-family:var(--font);font-weight:700;font-size:15px;padding:13px 24px;transition:.18s ease;display:inline-flex;align-items:center;gap:8px;}
+  .btn-primary{background:var(--gold);color:var(--navy);}
+  .btn-primary:hover{background:var(--gold-bright);transform:translateY(-1px);box-shadow:0 8px 20px rgba(214,160,18,.32);}
+  .btn-primary:disabled{background:#D6DCE4;color:#9AA6B5;cursor:not-allowed;transform:none;box-shadow:none;}
+  .btn-ghost{background:transparent;color:var(--navy);border:1.5px solid #C9D2DD;}
+  .btn-ghost:hover{border-color:var(--gold);color:var(--gold);background:#fff;}
+  .linkbtn{background:none;border:none;color:var(--slate);font-family:var(--font);font-size:13px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+  .linkbtn:hover{color:var(--no);}
+
+  /* ---------- LPC crest + wordmark ---------- */
+  .crest{display:inline-flex;color:var(--gold);}
+  .crest svg{display:block;}
+  .crest-lg svg{width:82px;height:auto;}
+  .crest-sm svg{width:34px;height:auto;}
+  .lockup{display:flex;align-items:center;gap:15px;}
+  .lpc-word{display:flex;flex-direction:column;line-height:1;}
+  .lpc-word b{font-family:var(--serif);font-weight:700;font-size:21px;color:var(--gold);letter-spacing:.005em;white-space:nowrap;}
+  .lpc-word .rule{height:1.6px;background:var(--gold);margin:6px 0 5px;width:100%;border-radius:2px;}
+  .lpc-word span{font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:var(--gold-soft);}
+
+  /* ---------- HOME ---------- */
+  .home{min-height:100vh;background:
+      radial-gradient(1100px 600px at 85% -10%, rgba(242,183,5,.10), transparent 60%),
+      linear-gradient(160deg,var(--navy) 0%, var(--navy-2) 55%, var(--navy-deep) 100%);
+      color:#fff;position:relative;overflow:hidden;display:flex;align-items:center;padding:48px 0;}
+  .watermark{position:absolute;color:var(--gold);opacity:.05;pointer-events:none;}
+  .wm-1{top:-50px;right:-110px;}
+  .wm-1 svg{width:560px;height:auto;}
+  .home .lockup{margin-bottom:34px;}
+  .home-eyebrow{color:var(--gold-bright);font-size:13px;letter-spacing:.2em;font-weight:800;text-transform:uppercase;position:relative;}
+  .home-eyebrow:after{content:"";display:block;width:46px;height:3px;background:var(--gold-bright);border-radius:2px;margin-top:12px;}
+  .home-title{font-size:clamp(34px,6vw,54px);font-weight:800;line-height:1.05;margin:22px 0 8px;letter-spacing:-.01em;}
+  .home-title .sub{display:block;font-size:clamp(17px,2.6vw,22px);font-weight:600;color:var(--gold-soft);margin-top:10px;letter-spacing:0;}
+  .home-sub{max-width:640px;color:#C7D2E2;font-size:16px;margin-top:14px;}
+  .home-sub b{color:#fff;}
+  .meta{display:flex;flex-wrap:wrap;gap:10px 34px;margin:28px 0 6px;position:relative;}
+  .meta>div{font-size:14.5px;color:#E4EBF5;}
+  .meta>div span{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-soft);font-weight:700;margin-bottom:3px;}
+  .mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:34px;}
+  .mode-card{background:rgba(255,255,255,.045);border:1.5px solid rgba(255,255,255,.14);border-radius:18px;padding:26px 24px;cursor:pointer;transition:.2s ease;text-align:left;position:relative;overflow:hidden;}
+  .mode-card:hover{border-color:var(--gold);background:rgba(242,183,5,.07);transform:translateY(-3px);box-shadow:var(--shadow-lg);}
+  .mode-card .mc-tag{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:800;color:var(--gold-bright);}
+  .mode-card h3{font-size:24px;font-weight:800;margin:8px 0 4px;color:#fff;}
+  .mode-card p{font-size:13.5px;color:#AEBBCE;min-height:38px;}
+  .mode-card .mc-status{margin-top:16px;display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;}
+  .mc-status.done{color:var(--gold-bright);} .mc-status.todo{color:#8C9AB0;}
+  .mc-status .dot{width:9px;height:9px;border-radius:50%;background:currentColor;}
+  .mode-card .mc-go{position:absolute;bottom:22px;right:22px;color:var(--gold);font-weight:800;font-size:22px;transition:.2s;}
+  .mode-card:hover .mc-go{transform:translateX(4px);color:var(--gold-bright);}
+  .mc-note{margin-top:10px;font-size:12px;color:var(--gold-soft);opacity:.85;font-style:italic;}
+  .home-foot{margin-top:30px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-top:1px solid rgba(255,255,255,.1);padding-top:18px;}
+  .home-foot .ff{font-size:12px;color:#8090A6;letter-spacing:.04em;}
+  .home-foot .linkbtn{color:#8C9AB0;} .home-foot .linkbtn:hover{color:var(--gold-bright);}
+
+  /* ---------- QUIZ ---------- */
+  .quiz{min-height:100vh;background:var(--paper);display:flex;flex-direction:column;}
+  .topbar{background:var(--navy);color:#fff;position:sticky;top:0;z-index:10;box-shadow:0 4px 18px rgba(8,26,51,.18);}
+  .topbar-inner{max-width:840px;margin:0 auto;padding:13px 22px;display:flex;align-items:center;gap:14px;}
+  .tb-word{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--gold);white-space:nowrap;}
+  .tb-mode{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;padding:5px 11px;border-radius:30px;}
+  .tb-mode.pre{background:rgba(242,183,5,.16);color:var(--gold-bright);}
+  .tb-mode.post{background:rgba(255,255,255,.12);color:#fff;}
+  .tb-right{margin-left:auto;display:flex;align-items:center;gap:16px;}
+  .tb-timer{font-size:13px;color:#B7C3D6;font-weight:600;font-variant-numeric:tabular-nums;display:inline-flex;align-items:center;gap:6px;}
+  .tb-timer svg{width:14px;height:14px;opacity:.8;}
+  .tb-count{font-size:13px;color:#B7C3D6;font-weight:600;}
+  .progress{height:5px;background:rgba(255,255,255,.14);}
+  .progress-bar{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-bright));border-radius:0 3px 3px 0;transition:width .35s cubic-bezier(.4,0,.2,1);}
+
+  .quiz-body{flex:1;padding:34px 0 60px;}
+  .step-dots{display:flex;gap:7px;justify-content:center;margin-bottom:20px;}
+  .step-dots i{width:26px;height:5px;border-radius:3px;background:#D4DCE6;transition:.3s;}
+  .step-dots i.done{background:var(--gold);} .step-dots i.now{background:var(--navy);width:34px;}
+  .qcard{background:#fff;border-radius:20px;box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--line);}
+  .qcard.anim{animation:fade .35s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+  .qcard-top{padding:26px 30px 4px;border-left:5px solid var(--gold);}
+  .q-module{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--gold);}
+  .q-head{font-size:13px;color:var(--slate-2);font-weight:700;margin-top:4px;letter-spacing:.02em;}
+  .q-title{font-size:23px;font-weight:800;color:var(--navy);margin:10px 0 14px;line-height:1.2;}
+  .q-prompt{font-size:16.5px;color:var(--ink);padding:0 30px;}
+  .options{padding:18px 30px 8px;display:flex;flex-direction:column;gap:11px;}
+  .option{display:flex;align-items:flex-start;gap:14px;border:1.6px solid var(--line);border-radius:13px;padding:15px 17px;cursor:pointer;transition:.16s ease;background:#fff;text-align:left;font-family:var(--font);width:100%;position:relative;}
+  .option:hover{border-color:var(--gold-soft);background:#FFFCF3;}
+  .option.selected{border-color:var(--gold);background:var(--cream);box-shadow:0 3px 14px rgba(214,160,18,.16);}
+  .opt-letter{flex:none;width:30px;height:30px;border-radius:9px;background:#EEF2F6;color:var(--navy);font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;transition:.16s;margin-top:1px;}
+  .option.selected .opt-letter{background:var(--gold);color:var(--navy);}
+  .opt-text{font-size:15px;color:var(--ink);line-height:1.45;flex:1;}
+  .opt-check{position:absolute;top:14px;right:15px;color:var(--gold);font-weight:800;font-size:18px;opacity:0;transform:scale(.6);transition:.16s;}
+  .option.selected .opt-check{opacity:1;transform:scale(1);}
+
+  .conf{margin:14px 30px 4px;background:#F7F9FB;border:1px solid var(--line);border-radius:13px;padding:16px 18px;}
+  .conf-label{font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;color:var(--slate);display:flex;align-items:center;gap:8px;}
+  .conf-label svg{width:14px;height:14px;color:var(--gold);}
+  .conf-scale{display:flex;gap:8px;margin-top:12px;}
+  .conf-btn{flex:1;border:1.6px solid var(--line);background:#fff;border-radius:10px;padding:11px 0;font-weight:800;font-size:16px;color:var(--navy);cursor:pointer;transition:.15s;font-family:var(--font);}
+  .conf-btn:hover{border-color:var(--gold-soft);}
+  .conf-btn.on{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .conf-ends{display:flex;justify-content:space-between;margin-top:8px;font-size:11.5px;color:var(--slate-2);font-weight:600;}
+
+  .keyhint{margin:12px 30px 0;font-size:12px;color:var(--slate-2);display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .kbd{display:inline-block;font-family:var(--font);font-weight:700;font-size:11px;color:var(--navy);background:#EEF2F6;border:1px solid #D4DCE6;border-bottom-width:2px;border-radius:5px;padding:1px 6px;}
+
+  .nav-row{padding:18px 30px 28px;display:flex;align-items:center;gap:12px;}
+  .nav-row .right{margin-left:auto;display:flex;gap:12px;align-items:center;}
+  .nav-hint{font-size:13px;color:var(--slate-2);font-style:italic;}
+
+  /* ---------- RESULTS ---------- */
+  .results{min-height:100vh;background:var(--paper);padding-bottom:60px;}
+  .res-hero{background:
+      radial-gradient(900px 500px at 90% -20%, rgba(242,183,5,.10), transparent 60%),
+      linear-gradient(160deg,var(--navy) 0%, var(--navy-2) 70%, var(--navy-deep) 100%);
+      color:#fff;padding:32px 0 40px;position:relative;overflow:hidden;}
+  .res-hero .lockup{margin-bottom:26px;}
+  .res-grid{display:flex;align-items:center;gap:30px;flex-wrap:wrap;}
+  .ring-wrap{flex:none;position:relative;width:140px;height:140px;}
+  .ring-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .rn-top{display:flex;align-items:baseline;}
+  .rn-top b{font-size:44px;font-weight:800;line-height:1;}
+  .rn-den{font-size:22px;color:var(--gold-soft);font-weight:800;}
+  .rn-lab{font-size:12px;color:var(--gold-soft);font-weight:700;letter-spacing:.12em;margin-top:3px;}
+  .res-headtext h2{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-bright);font-weight:800;}
+  .res-headtext .band-name{font-size:34px;font-weight:800;margin:6px 0 6px;}
+  .res-headtext p{color:#C7D2E2;font-size:15px;max-width:460px;}
+  .res-headtext .timetag{display:inline-flex;align-items:center;gap:6px;margin-top:12px;font-size:12.5px;color:var(--gold-soft);font-weight:600;}
+
+  .res-body{padding:30px 0 0;}
+  .panel{background:#fff;border-radius:18px;box-shadow:var(--shadow);border:1px solid var(--line);padding:24px 26px;margin-bottom:18px;animation:rise .5s ease both;}
+  @keyframes rise{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+  .panel h3{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:800;margin-bottom:4px;}
+  .panel .ph-sub{color:var(--slate);font-size:14px;margin-bottom:16px;}
+
+  .gain-banner{display:flex;align-items:center;gap:24px;background:linear-gradient(135deg,var(--navy),var(--navy-2));color:#fff;border-radius:18px;padding:26px 28px;margin-bottom:18px;box-shadow:var(--shadow);flex-wrap:wrap;animation:rise .5s ease both;}
+  .gain-big{font-size:56px;font-weight:800;line-height:.9;flex:none;}
+  .gain-big.pos{color:#86E2AC;} .gain-big.zero{color:var(--gold-soft);} .gain-big.neg{color:#F3A39D;}
+  .gain-txt b{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-bright);display:block;}
+  .gain-txt .gt-main{font-size:20px;font-weight:700;margin:4px 0 4px;}
+  .gain-txt p{color:#BCC8DA;font-size:13.5px;max-width:440px;}
+  .gain-pre-note{background:rgba(255,255,255,.07);border:1px dashed rgba(255,255,255,.3);}
+
+  .ctable{width:100%;border-collapse:collapse;font-size:14px;}
+  .ctable th{text-align:left;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--slate);font-weight:800;padding:8px 8px;border-bottom:2px solid var(--line);}
+  .ctable th.c,.ctable td.c{text-align:center;}
+  .ctable td{padding:11px 8px;border-bottom:1px solid var(--line);color:var(--ink);}
+  .ctable td.mod{font-weight:600;}
+  .ctable tr.totals td{font-weight:800;color:var(--navy);border-top:2px solid var(--navy);border-bottom:none;padding-top:13px;}
+  .tick{font-weight:800;} .tick.y{color:var(--ok);} .tick.n{color:var(--no);}
+  .cpill{display:inline-flex;min-width:24px;justify-content:center;font-weight:800;color:var(--navy);font-size:13px;background:#EEF2F6;border-radius:6px;padding:2px 7px;}
+
+  /* calibration */
+  .calib-top{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start;}
+  .calib-left{flex:1;min-width:240px;}
+  .calib-verdict{font-size:15.5px;font-weight:700;color:var(--navy);background:#F7F9FB;border-left:4px solid var(--gold);border-radius:0 10px 10px 0;padding:13px 15px;line-height:1.45;}
+  .calib-verdict.good{border-left-color:var(--ok);background:var(--ok-bg);}
+  .calib-verdict.warn{border-left-color:var(--no);background:var(--no-bg);}
+  .calib-verdict.mid{border-left-color:var(--gold);background:var(--cream);}
+  .cbar-row{margin-top:14px;}
+  .cbar-lab{display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;color:var(--slate);margin-bottom:5px;}
+  .cbar-lab b{color:var(--navy);}
+  .cbar{height:11px;background:#EEF2F6;border-radius:7px;overflow:hidden;}
+  .cbar-fill{height:100%;border-radius:7px;transition:width .8s cubic-bezier(.4,0,.2,1);}
+  .cbar-fill.r{background:linear-gradient(90deg,var(--ok),#3FA76D);}
+  .cbar-fill.w{background:linear-gradient(90deg,var(--no),#D06059);}
+  .conf-delta{margin-top:14px;font-size:13px;color:var(--slate);}
+  .conf-delta b{color:var(--navy);}
+  .matrix{flex:none;width:280px;}
+  .matrix-grid{display:grid;grid-template-columns:auto 1fr 1fr;gap:6px;font-size:12px;}
+  .mx-h{font-weight:800;color:var(--slate);text-transform:uppercase;letter-spacing:.05em;font-size:10px;display:flex;align-items:flex-end;padding:0 2px 4px;}
+  .mx-rh{font-weight:800;color:var(--slate);text-transform:uppercase;letter-spacing:.04em;font-size:10px;display:flex;align-items:center;}
+  .mx-cell{border-radius:10px;padding:11px 10px;text-align:center;border:1.4px solid var(--line);background:#fff;}
+  .mx-cell .n{font-size:22px;font-weight:800;color:var(--navy);line-height:1;}
+  .mx-cell .l{font-size:10.5px;color:var(--slate);font-weight:700;margin-top:4px;display:block;line-height:1.25;}
+  .mx-cell.ideal{background:var(--cream);border-color:var(--cream-line);}
+  .mx-cell.ideal .n{color:#9a7400;}
+  .mx-cell.over{background:var(--no-bg);border-color:#EBC8C5;}
+  .mx-cell.over .n{color:var(--no);}
+  .priority-line{margin-top:16px;font-size:13.5px;color:var(--ink);}
+  .priority-line .pl-h{font-weight:800;color:var(--no);display:block;margin-bottom:6px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;}
+  .priority-line ul{list-style:none;display:flex;flex-direction:column;gap:6px;}
+  .priority-line li{background:var(--no-bg);border-radius:9px;padding:9px 12px;display:flex;gap:9px;align-items:center;}
+  .priority-line li .i{color:var(--no);font-weight:800;}
+  .priority-ok{margin-top:16px;font-size:13.5px;color:var(--ok);background:var(--ok-bg);border-radius:10px;padding:11px 14px;display:flex;gap:9px;align-items:center;}
+
+  .bd-item{border:1px solid var(--line);border-radius:13px;padding:16px 18px;margin-bottom:12px;}
+  .bd-item.correct{border-left:4px solid var(--ok);}
+  .bd-item.wrong{border-left:4px solid var(--no);}
+  .bd-top{display:flex;align-items:center;gap:11px;flex-wrap:wrap;}
+  .bd-badge{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:#fff;flex:none;}
+  .bd-badge.y{background:var(--ok);} .bd-badge.n{background:var(--no);}
+  .bd-mod{font-weight:800;color:var(--navy);font-size:15px;}
+  .bd-conf{margin-left:auto;font-size:12px;color:var(--slate);font-weight:600;}
+  .bd-conf b{color:var(--navy);}
+  .bd-ans{font-size:14px;margin-top:11px;color:var(--ink);}
+  .bd-ans .lab{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);font-weight:800;margin-right:6px;}
+  .bd-ans .yourwrong{color:var(--no);} .bd-ans .right{color:var(--ok);font-weight:700;}
+  .bd-explain{font-size:13.5px;color:var(--slate);margin-top:9px;background:#F7F9FB;border-radius:9px;padding:10px 12px;line-height:1.5;}
+  .bd-explain .trap{display:block;margin-top:6px;color:var(--no);font-size:12.5px;}
+  .bd-explain .trap b{color:var(--no);}
+
+  .callout{background:var(--cream);border-left:5px solid var(--gold);border-radius:0 12px 12px 0;padding:16px 18px;margin-bottom:18px;animation:rise .5s ease both;}
+  .callout .ct-h{font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:var(--gold);display:flex;align-items:center;gap:8px;}
+  .callout .ct-h svg{width:15px;height:15px;}
+  .callout p{font-size:14.5px;color:var(--ink);margin-top:7px;line-height:1.55;}
+
+  .res-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;align-items:center;}
+  .res-foot{text-align:center;font-size:12px;color:var(--slate-2);margin-top:24px;letter-spacing:.04em;}
+
+  .pre-strip{display:flex;align-items:center;gap:12px;padding:13px 16px;border:1px solid var(--line);border-radius:12px;margin-bottom:10px;}
+  .pre-strip .ps-n{width:24px;height:24px;border-radius:7px;background:var(--navy);color:#fff;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;flex:none;}
+  .pre-strip .ps-mod{font-weight:600;color:var(--ink);font-size:14.5px;}
+  .pre-strip .ps-conf{margin-left:auto;font-size:12.5px;color:var(--slate);font-weight:600;}
+  .pre-strip .ps-conf b{color:var(--navy);}
+
+  @media(max-width:660px){
+    .mode-grid{grid-template-columns:1fr;}
+    .q-title{font-size:20px;} .q-prompt{font-size:15.5px;}
+    .qcard-top,.q-prompt,.options,.conf,.nav-row,.keyhint{padding-left:20px;padding-right:20px;}
+    .conf,.options,.keyhint{margin-left:20px;margin-right:20px;}
+    .conf-btn{font-size:14px;padding:10px 0;}
+    .ring-wrap{width:118px;height:118px;}
+    .gain-big{font-size:46px;}
+    .ctable th,.ctable td{padding:8px 5px;font-size:12.5px;}
+    .nav-row .right{width:100%;flex-wrap:wrap;}
+    .nav-hint{display:none;}
+    .matrix{width:100%;}
+    .tb-word,.keyhint{display:none;}
+  }
+
+  /* ---------- print ---------- */
+  @media print{
+    .no-print{display:none!important;}
+    body{background:#fff;}
+    .results{padding:0;}
+    .res-hero{background:#fff!important;color:var(--navy)!important;padding:8px 0 14px;border-bottom:2px solid var(--gold);}
+    .res-headtext h2{color:#8a6d00!important;}
+    .res-headtext .band-name,.rn-top b{color:var(--navy)!important;}
+    .res-headtext p,.res-headtext .timetag{color:#333!important;}
+    .gain-banner{background:#fff!important;color:var(--navy)!important;border:1.5px solid var(--gold);box-shadow:none;}
+    .gain-txt b{color:#8a6d00!important;} .gain-txt .gt-main{color:var(--navy)!important;} .gain-txt p{color:#333!important;}
+    .panel,.callout{box-shadow:none;border:1px solid #ccc;break-inside:avoid;animation:none;}
+    .lpc-word b,.lpc-word .rule{color:var(--gold)!important;}
+    .crest svg,.ring-wrap svg{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    @page{margin:13mm;}
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+/* =========================================================
+   LPC — Day 1 Knowledge Check (Pre & Post)  ·  Course MLDL1149
+   ========================================================= */
+
+const STORAGE_KEY = "lpc-mldl1149-augustine-assessment";
+let memoryFallback = null;
+let appResults = {};
+
+/* ---------------- LPC crest (heraldic SVG recreation) --------------- */
+const LION = `
+  <path d="M16 56 C5 50 2 36 7 26 C9 21 15 19 18 25" fill="none" stroke="#D6A012" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="6.5" cy="26" r="4.5"/>
+  <path d="M32 96 C26 96 23 91 22 85 L21 68 C20 58 22 49 30 45 C37 42 42 47 42 56 L43 76 C44 86 41 96 35 96 Z"/>
+  <path d="M40 46 C46 50 48 58 46 66 L48 80 C48 84 45 86 42 84 C41 74 38 60 38 50 Z"/>
+  <path d="M40 36 C47 31 54 30 55 25 C56 22 53 20 50 22 C46 25 42 30 37 34 Z"/>
+  <path d="M34 30 C33 36 35 42 40 44 C44 42 46 38 45 32 Z"/>
+  <circle cx="39" cy="22" r="10"/>
+  <path d="M47 17 L57 22 L47 28 Z"/>
+  <path d="M46 25 L55 27 L46 31 Z"/>
+  <path d="M41 9 L47 12 L40 15 Z"/>
+  <path d="M31 10 L37 15 L29 18 Z"/>
+  <path d="M30 20 L37 23 L29 27 Z"/>
+  <path d="M31 30 L38 32 L30 36 Z"/>`;
+
+function crestSVG(){
+  return `<svg viewBox="0 0 220 250" xmlns="http://www.w3.org/2000/svg" aria-label="London Premier Centre crest">
+    <path d="M110 10 L204 44 V124 C204 184 166 218 110 244 C54 218 16 184 16 124 V44 Z" fill="#FFFFFF" stroke="#D6A012" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M110 23 L194 53 V123 C194 178 160 209 110 231 C60 209 26 178 26 123 V53 Z" fill="none" stroke="#D6A012" stroke-width="2.4"/>
+    <g fill="#D6A012">
+      <path d="M74 74 L80 66 L82 52 L84 66 L92 64 L96 48 L100 64 L106 62 L110 38 L114 62 L120 64 L124 48 L128 64 L136 66 L138 52 L140 66 L146 74 Z"/>
+      <circle cx="82" cy="50" r="4"/><circle cx="96" cy="46" r="4"/><circle cx="124" cy="46" r="4"/><circle cx="138" cy="50" r="4"/><circle cx="110" cy="36" r="4.5"/>
+      <rect x="76" y="74" width="68" height="8" rx="1"/>
+    </g>
+    <g fill="#D6A012" transform="translate(34,80) scale(0.98)">${LION}</g>
+    <g fill="#D6A012" transform="translate(186,80) scale(-0.98,0.98)">${LION}</g>
+    <g fill="#D6A012">
+      <circle cx="110" cy="106" r="9"/><circle cx="100" cy="116" r="8"/><circle cx="120" cy="116" r="8"/>
+      <path d="M110 118 L116 124 L110 142 L104 124 Z"/>
+    </g>
+    <g fill="#D6A012">
+      <path d="M110 150 L142 168 H78 Z"/>
+      <rect x="77" y="170" width="66" height="6"/>
+      <rect x="86" y="178" width="7" height="22"/><rect x="99" y="178" width="7" height="22"/><rect x="112" y="178" width="7" height="22"/><rect x="125" y="178" width="7" height="22"/>
+      <rect x="78" y="200" width="64" height="6"/>
+      <rect x="74" y="206" width="72" height="7"/>
+    </g>
+  </svg>`;
+}
+function lockupHTML(size){
+  const cls = size==="sm" ? "crest-sm" : "crest-lg";
+  return `<div class="lockup">
+    <span class="crest ${cls}">${crestSVG()}</span>
+    <span class="lpc-word"><b>London Premier Centre</b><i class="rule"></i><span>UK Training Provider</span></span>
+  </div>`;
+}
+
+const penSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/></svg>';
+const keySVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="M11.4 11.6L21 2"/><path d="M16 7l3 3"/><path d="M18 5l3 3"/></svg>';
+const clockSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+
+/* ---------------- Question bank (same 6 for pre & post) --------------- */
+const MODULES = ["Defining AI","The evolution of AI","Applications of AI","How AI learns from data","AI across the sectors","Opportunities & limits"];
+
+const QUESTIONS = [
+  { module:"Module 1 · Defining AI", head:"What AI Actually Is",
+    prompt:"Your board asks for a one-sentence definition of AI. Which is the most accurate — and the safest to govern by?",
+    options:[
+      {text:"A machine that thinks, understands and reasons like a human being.", correct:false},
+      {text:"Software that learns patterns from data to predict or generate outputs — a powerful statistical engine, not a conscious mind.", correct:true},
+      {text:"A fixed set of rules a programmer writes by hand for every possible case.", correct:false},
+      {text:"A system that is always correct because its answers are mathematical.", correct:false}
+    ],
+    explain:"AI learns patterns from data — it is not human understanding, not hand-written rules, and not infallible. “Statistical engine” is the right mental model to govern by.",
+    trap:"“AI thinks like a human.”"
+  },
+  { module:"Module 2 · The Evolution of AI", head:"Why AI Arrived “At Every Desk”",
+    prompt:"Around 2022, AI moved from the research lab to every employee’s desk — creating a new data-leakage risk for banks. Why did this happen?",
+    options:[
+      {text:"A new regulation obliged all banks to deploy AI.", correct:false},
+      {text:"Computers became genuinely conscious for the first time.", correct:false},
+      {text:"Abundant data, cheap computing power, the cloud and simple chat interfaces converged — putting powerful AI in everyone’s hands.", correct:true},
+      {text:"Traditional banking software stopped working.", correct:false}
+    ],
+    explain:"Data, compute, the cloud and simple interfaces converged. The same shift that puts AI at every desk also creates the staff data-leakage risk.",
+    trap:"“Computers became conscious.”"
+  },
+  { module:"Module 3 · Applications of AI", head:"The Right Kind of Machine Learning",
+    prompt:"Your AML team must surface a brand-new laundering pattern for which you hold no labelled “suspicious / clean” history. Which approach fits best?",
+    options:[
+      {text:"Supervised learning — it learns from labelled past examples.", correct:false},
+      {text:"Unsupervised learning — it finds unusual clusters and groupings without needing labels.", correct:true},
+      {text:"No AI can help; only fully manual review is possible.", correct:false},
+      {text:"Reinforcement learning, simply because it is the most recent.", correct:false}
+    ],
+    explain:"With no labels, supervised learning cannot help. Unsupervised learning surfaces unknown clusters — ideal for a brand-new typology.",
+    trap:"“No labels means no AI.”"
+  },
+  { module:"Module 4 · How AI Learns From Data", head:"Governing a Model You Did Not Build",
+    prompt:"A vendor pitches an AML model as “99% accurate.” As Head of Compliance & Control, what is your first governance question?",
+    options:[
+      {text:"Can we roll it out to every PFI by next week?", correct:false},
+      {text:"Is there a mobile app for the board?", correct:false},
+      {text:"What data was it trained on — from when, representing whom — and can we explain and audit its decisions to the CBN and NFIU?", correct:true},
+      {text:"Is it cheaper than the tool we use today?", correct:false}
+    ],
+    explain:"A model is a record of its training data (“garbage in, garbage out”). Demand explainable, auditable decisions for the CBN and NFIU before price or speed.",
+    trap:"Chasing the accuracy claim over assurance."
+  },
+  { module:"Module 5 · AI Across the Sectors", head:"Where AI Helps DBN Most",
+    prompt:"DBN lends to MSMEs through Participating Financial Institutions (PFIs), not directly. Where does AI add the most compliance value for DBN specifically?",
+    options:[
+      {text:"Replacing the compliance team entirely with automation.", correct:false},
+      {text:"At the intermediary boundary — screening counterparties and monitoring the end-use of funds, where DBN’s AML/CFT risk flows through its PFIs.", correct:true},
+      {text:"Designing new marketing campaigns for retail customers.", correct:false},
+      {text:"Nowhere — AI has no role in a wholesale development bank.", correct:false}
+    ],
+    explain:"DBN’s AML/CFT risk is largely indirect — it flows through the PFIs it funds. AI’s value is sharpest at that intermediary boundary.",
+    trap:"“AI replaces the team.”"
+  },
+  { module:"Module 6 · Opportunities & Limitations", head:"The Right Posture Toward AI",
+    prompt:"Generative AI can state false information with great confidence (a “hallucination”). What is the correct posture for DBN?",
+    options:[
+      {text:"Ban AI outright; the risk can never be controlled.", correct:false},
+      {text:"Trust every AI output — the model is mathematical and therefore objective.", correct:false},
+      {text:"Adopt AI for drafting and triage, but keep a named human accountable to review and sign off every filed output.", correct:true},
+      {text:"Use AI only for tasks where mistakes would not matter at all.", correct:false}
+    ],
+    explain:"Pro-adoption and clear-eyed: the LLM drafts, the officer signs. Every opportunity’s paired risk has a known control.",
+    trap:"Ban-it-all or trust-it-all."
+  }
+];
+
+const LETTERS = ["A","B","C","D"];
+const CONF_LABELS = {1:"Guessing",2:"Unsure",3:"Fair",4:"Confident",5:"Certain"};
+
+/* ---------------- State ---------------- */
+let state = { screen:"home", mode:"pre", currentQ:0, answers:[], order:[], animateQ:false, quizStart:0 };
+
+/* ---------------- Storage (localStorage, with in-memory fallback) ---------------- */
+async function loadResults(){
+  try{ const v = localStorage.getItem(STORAGE_KEY); if(v) return JSON.parse(v); }
+  catch(e){}
+  return memoryFallback ? JSON.parse(JSON.stringify(memoryFallback)) : {};
+}
+async function saveResults(data){
+  memoryFallback = JSON.parse(JSON.stringify(data));
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }catch(e){}
+}
+async function clearResults(){ memoryFallback={}; try{ localStorage.removeItem(STORAGE_KEY); }catch(e){} }
+
+/* ---------------- Utils ---------------- */
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function fmtTime(sec){ const m=Math.floor(sec/60); return m+":"+String(sec%60).padStart(2,"0"); }
+function avg(a){ return a.length ? a.reduce((x,y)=>x+y,0)/a.length : null; }
+function bandOf(s){ if(s<=2)return{label:"Emerging"}; if(s<=4)return{label:"Developing"}; return{label:"Strong"}; }
+function bandBlurb(s){ if(s<=2)return"The foundations are still forming. The breakdown below shows exactly which modules to focus on."; if(s<=4)return"Solid instincts, with clear room to sharpen. The breakdown below points to where."; return"A confident grasp of the Day 1 foundations. Carry this discipline into Day 2."; }
+
+/* ---------------- Actions ---------------- */
+function startQuiz(mode){
+  state.mode=mode; state.screen="quiz"; state.currentQ=0; state.animateQ=true; state.quizStart=Date.now();
+  state.answers=QUESTIONS.map(()=>({pos:null,confidence:null}));
+  state.order=QUESTIONS.map(()=> mode==="post" ? shuffle([0,1,2,3]) : [0,1,2,3]);
+  window.scrollTo(0,0); render();
+}
+function refreshPrimary(){
+  const ok=canProceed();
+  const b=document.getElementById("primaryBtn"); if(b) b.disabled=!ok;
+  const h=document.getElementById("navHint"); if(h) h.style.display=ok?"none":"";
+}
+function selectOption(pos){
+  state.answers[state.currentQ].pos=pos;
+  document.querySelectorAll(".option").forEach((el,i)=>{ const on=i===pos; el.classList.toggle("selected",on); el.setAttribute("aria-pressed",on); });
+  refreshPrimary();
+}
+function setConfidence(c){
+  state.answers[state.currentQ].confidence=c;
+  document.querySelectorAll(".conf-btn").forEach((el,i)=>{ const on=(i+1)===c; el.classList.toggle("on",on); el.setAttribute("aria-pressed",on); });
+  refreshPrimary();
+}
+function canProceed(){ const a=state.answers[state.currentQ]; return a && a.pos!==null && a.confidence!==null; }
+function nextQ(){ if(canProceed() && state.currentQ<QUESTIONS.length-1){ state.currentQ++; state.animateQ=true; window.scrollTo(0,0); render(); } }
+function prevQ(){ if(state.currentQ>0){ state.currentQ--; state.animateQ=true; window.scrollTo(0,0); render(); } }
+async function submitQuiz(){
+  if(!canProceed()) return;
+  const per=state.answers.map((a,q)=>{
+    const oi=state.order[q][a.pos]; const opt=QUESTIONS[q].options[oi]; const cor=QUESTIONS[q].options.find(o=>o.correct);
+    return { correct:!!opt.correct, confidence:a.confidence, chosen:opt.text, answer:cor.text };
+  });
+  const total=per.filter(p=>p.correct).length;
+  const timeSec=Math.floor((Date.now()-state.quizStart)/1000);
+  appResults[state.mode]={ total, per, at:Date.now(), timeSec };
+  await saveResults(appResults);
+  state.screen="results"; window.scrollTo(0,0); render();
+}
+function goHome(){ state.screen="home"; window.scrollTo(0,0); render(); }
+function printResult(){ window.print(); }
+async function resetAll(){
+  if(!confirm("Reset both Pre- and Post-Test results for Augustine? This cannot be undone.")) return;
+  appResults={}; await clearResults(); goHome();
+}
+
+/* ---------------- Render ---------------- */
+function render(){
+  const app=document.getElementById("app");
+  if(state.screen==="home") app.innerHTML=homeHTML();
+  else if(state.screen==="quiz"){ app.innerHTML=quizHTML(); state.animateQ=false; }
+  else { app.innerHTML=resultsHTML(); const r=appResults[state.mode]; requestAnimationFrame(()=>animateResults(r.total)); }
+}
+
+function modeCardHTML(mode){
+  const r=appResults[mode]; const isPre=mode==="pre";
+  const tag=isPre?"Step 1 · Baseline":"Step 2 · Measure";
+  const title=isPre?"Pre-Test":"Post-Test";
+  const desc=isPre?"Take this at the start of Day 1, before a single concept is taught.":"Take this at the close of Day 1 to turn today’s literacy into a measured result.";
+  const status=r?`<div class="mc-status done"><span class="dot"></span>Completed · ${r.total}/6</div>`:`<div class="mc-status todo"><span class="dot"></span>Not started</div>`;
+  const note=(!isPre&&!appResults.pre)?`<div class="mc-note">Best taken after the Pre-Test, to measure your learning gain.</div>`:"";
+  return `<button class="mode-card" onclick="startQuiz('${mode}')">
+    <div class="mc-tag">${tag}</div><h3>${title}</h3><p>${desc}</p>${status}${note}<span class="mc-go">&rarr;</span></button>`;
+}
+
+function homeHTML(){
+  return `<div class="home">
+    <div class="watermark wm-1 crest">${crestSVG()}</div>
+    <div class="container">
+      ${lockupHTML("lg")}
+      <div class="home-eyebrow">Executive Programme · Day 1 Knowledge Check</div>
+      <h1 class="home-title">Pre &amp; Post Assessment<span class="sub">Overview of Artificial Intelligence · Six Questions</span></h1>
+      <p class="home-sub">The same six questions, asked twice — once before Day 1 and once after. The gap between the two scores, your <b>learning gain</b>, is the real measure of the day.</p>
+      <div class="meta">
+        <div><span>Participant</span>Augustine Achikasim · Head, Compliance &amp; Control · DBN Plc</div>
+        <div><span>Instructor</span>Thomas Truong — LPC Paris</div>
+        <div><span>Schedule</span>Paris · 22–26 June 2026</div>
+      </div>
+      <div class="mode-grid">${modeCardHTML("pre")}${modeCardHTML("post")}</div>
+      <div class="home-foot">
+        <div class="ff">lpcentre.com · Course ID MLDL1149 · ~8 minutes · no notes, no devices</div>
+        <button class="linkbtn" onclick="resetAll()">Reset results</button>
+      </div>
+    </div></div>`;
+}
+
+function quizHTML(){
+  const idx=state.currentQ, q=QUESTIONS[idx], a=state.answers[idx];
+  const last=idx===QUESTIONS.length-1, pct=((idx+1)/QUESTIONS.length)*100, isPost=state.mode==="post";
+  const dots=QUESTIONS.map((_,i)=>`<i class="${i<idx?'done':(i===idx?'now':'')}"></i>`).join("");
+  const opts=state.order[idx].map((oi,pos)=>{
+    const o=QUESTIONS[idx].options[oi]; const sel=a.pos===pos;
+    return `<button class="option${sel?' selected':''}" aria-pressed="${sel}" onclick="selectOption(${pos})">
+      <span class="opt-letter">${LETTERS[pos]}</span><span class="opt-text">${esc(o.text)}</span><span class="opt-check">&#10003;</span></button>`;
+  }).join("");
+  const conf=[1,2,3,4,5].map(c=>`<button class="conf-btn${a.confidence===c?' on':''}" aria-pressed="${a.confidence===c}" onclick="setConfidence(${c})">${c}</button>`).join("");
+  const primary=last
+    ? `<button id="primaryBtn" class="btn btn-primary" ${canProceed()?"":"disabled"} onclick="submitQuiz()">Submit &amp; See Results &rarr;</button>`
+    : `<button id="primaryBtn" class="btn btn-primary" ${canProceed()?"":"disabled"} onclick="nextQ()">Next question &rarr;</button>`;
+  return `<div class="quiz">
+    <div class="topbar">
+      <div class="topbar-inner">
+        <span class="crest crest-sm">${crestSVG()}</span>
+        <span class="tb-word">London Premier Centre</span>
+        <span class="tb-mode ${state.mode}">${isPost?"Post-Test":"Pre-Test"}</span>
+        <div class="tb-right">
+          <span class="tb-timer">${clockSVG}<span id="timer">0:00</span></span>
+          <span class="tb-count">Question ${idx+1} of ${QUESTIONS.length}</span>
+        </div>
+      </div>
+      <div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div>
+    </div>
+    <div class="quiz-body"><div class="container">
+      <div class="step-dots">${dots}</div>
+      <div class="qcard${state.animateQ?' anim':''}">
+        <div class="qcard-top">
+          <div class="q-module">${q.module}</div>
+          <div class="q-head">${esc(q.head)}</div>
+          <div class="q-title">Question ${idx+1}</div>
+        </div>
+        <div class="q-prompt">${esc(q.prompt)}</div>
+        <div class="options">${opts}</div>
+        <div class="conf">
+          <div class="conf-label">${penSVG} How confident are you?</div>
+          <div class="conf-scale">${conf}</div>
+          <div class="conf-ends"><span>1 — Guessing</span><span>5 — Certain</span></div>
+        </div>
+        <div class="keyhint">Keyboard: <span class="kbd">A</span>–<span class="kbd">D</span> to answer · <span class="kbd">1</span>–<span class="kbd">5</span> for confidence · <span class="kbd">&#8629; Enter</span> to advance</div>
+        <div class="nav-row">
+          <button class="btn btn-ghost" ${idx===0?"disabled":""} onclick="prevQ()">&larr; Back</button>
+          <div class="right"><span id="navHint" class="nav-hint" ${canProceed()?'style="display:none"':''}>Choose an answer and your confidence</span>${primary}</div>
+        </div>
+      </div>
+    </div></div></div>`;
+}
+
+function ringHTML(){
+  return `<div class="ring-wrap"><svg viewBox="0 0 140 140" width="140" height="140">
+      <circle cx="70" cy="70" r="60" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="12"/>
+      <circle id="scoreArc" cx="70" cy="70" r="60" fill="none" stroke="#F2B705" stroke-width="12" stroke-linecap="round" stroke-dasharray="0 377" transform="rotate(-90 70 70)"/>
+    </svg>
+    <div class="ring-num"><div class="rn-top"><b id="scoreNum">0</b><span class="rn-den">/6</span></div><span class="rn-lab">SCORE</span></div></div>`;
+}
+function animateResults(score){
+  const arc=document.getElementById("scoreArc"), num=document.getElementById("scoreNum");
+  const r=60, circ=2*Math.PI*r, target=(score/6)*circ; let start=null; const dur=950;
+  function step(ts){ if(!start)start=ts; const t=Math.min(1,(ts-start)/dur); const e=1-Math.pow(1-t,3);
+    if(arc) arc.style.strokeDasharray=(target*e).toFixed(1)+" "+circ.toFixed(1);
+    if(num) num.textContent=Math.round(score*e);
+    if(t<1) requestAnimationFrame(step); else if(num) num.textContent=score; }
+  requestAnimationFrame(step);
+  document.querySelectorAll(".cbar-fill").forEach(el=>{ const w=el.getAttribute("data-w"); requestAnimationFrame(()=>{ el.style.width=w+"%"; }); });
+}
+
+function resultsHTML(){
+  const mode=state.mode, res=appResults[mode], b=bandOf(res.total);
+  const heroHead=mode==="post"?"Post-Test Result":"Pre-Test Baseline";
+  const timeTag=res.timeSec!=null?`<span class="timetag">${clockSVG} Completed in ${fmtTime(res.timeSec)}</span>`:"";
+  const hero=`<div class="res-hero"><div class="container">
+      ${lockupHTML("lg")}
+      <div class="res-grid">${ringHTML()}
+        <div class="res-headtext">
+          <h2>${heroHead}</h2>
+          <div class="band-name">${b.label}</div>
+          <p>${bandBlurb(res.total)} <span style="color:var(--gold-soft)">Bands: 0–2 emerging · 3–4 developing · 5–6 strong.</span></p>
+          ${timeTag}
+        </div>
+      </div></div></div>`;
+  const body=mode==="post"?postBody(res):preBody(res);
+  return `<div class="results">${hero}<div class="res-body"><div class="container">${body}
+    <div class="res-foot">London Premier Centre · Paris 2026 · Course ID MLDL1149</div>
+  </div></div></div>`;
+}
+
+/* ----- PRE: score + confidence only, key withheld ----- */
+function preBody(res){
+  const avgC=avg(res.per.map(p=>p.confidence));
+  const strips=res.per.map((p,i)=>`<div class="pre-strip">
+      <span class="ps-n">${i+1}</span><span class="ps-mod">${MODULES[i]}</span>
+      <span class="ps-conf">Confidence <b>${p.confidence}</b>/5 · ${CONF_LABELS[p.confidence]}</span></div>`).join("");
+  return `
+    <div class="callout">
+      <div class="ct-h">${keySVG} Answer key withheld</div>
+      <p>This is your honest baseline — there is <b>no penalty</b> on the pre-test. To keep your post-test a clean measure of today’s learning, the correct answers and explanations are revealed only after the Day 1 <b>post-test</b>.</p>
+    </div>
+    <div class="panel">
+      <h3>Your Baseline — Recorded</h3>
+      <div class="ph-sub">Six modules captured, with your confidence on each. Total: <b>${res.total}/6</b> · average confidence <b>${avgC.toFixed(1)}</b>/5.</div>
+      ${strips}
+    </div>
+    <div class="res-actions no-print">
+      <button class="btn btn-primary" onclick="goHome()">&larr; Back to overview</button>
+      <button class="btn btn-ghost" onclick="startQuiz('pre')">Retake Pre-Test</button>
+      <span style="margin-left:auto;color:var(--slate);font-size:13px;font-style:italic">Take the Post-Test at the close of Day 1.</span>
+    </div>`;
+}
+
+/* ----- POST: gain, tracker, calibration, full key ----- */
+function postBody(res){
+  const pre=appResults.pre;
+
+  /* gain */
+  let gain;
+  if(pre){
+    const g=res.total-pre.total; const cls=g>0?"pos":(g<0?"neg":"zero"); const sign=g>0?"+"+g:""+g;
+    let main,sub;
+    if(g>0){ main=`Today moved you forward by ${g} point${g===1?"":"s"}.`; sub="The gap between baseline and now is the cleanest measure of the day’s teaching."; }
+    else if(g===0){ main="Your score held steady."; sub="The breakdown below shows where to consolidate before Day 2."; }
+    else { main="Your post-test score came in below baseline."; sub="Often a sign of second-guessing rather than lost ground — re-read the flagged modules below."; }
+    gain=`<div class="gain-banner"><div class="gain-big ${cls}">${sign}</div>
+      <div class="gain-txt"><b>Learning Gain · Post − Pre</b><div class="gt-main">${main}</div>
+      <p>${sub} &nbsp;Pre ${pre.total}/6 &rarr; Post ${res.total}/6.</p></div></div>`;
+  } else {
+    gain=`<div class="gain-banner gain-pre-note"><div class="gain-txt"><b>Learning Gain · Post − Pre</b>
+      <div class="gt-main">No Pre-Test on record</div>
+      <p>Your gain can’t be computed without a baseline. Take the Pre-Test at the start of Day 1 next time to measure the full learning gain.</p></div></div>`;
+  }
+
+  /* tracker table */
+  let table="";
+  if(pre){
+    const rows=MODULES.map((m,i)=>{ const pr=pre.per[i], po=res.per[i];
+      return `<tr><td class="mod">${m}</td>
+        <td class="c"><span class="tick ${pr.correct?'y':'n'}">${pr.correct?'✓':'✗'}</span></td>
+        <td class="c"><span class="cpill">${pr.confidence}</span></td>
+        <td class="c"><span class="tick ${po.correct?'y':'n'}">${po.correct?'✓':'✗'}</span></td>
+        <td class="c"><span class="cpill">${po.confidence}</span></td></tr>`; }).join("");
+    table=`<div class="panel"><h3>Pre &amp; Post Tracker</h3>
+      <div class="ph-sub">Read it per question — any module still wrong after Day 1 names what to revisit.</div>
+      <table class="ctable"><thead><tr><th>Module</th><th class="c">Pre</th><th class="c">Pre conf.</th><th class="c">Post</th><th class="c">Post conf.</th></tr></thead>
+      <tbody>${rows}<tr class="totals"><td>Total / 6</td><td class="c">${pre.total}</td><td class="c">—</td><td class="c">${res.total}</td><td class="c">—</td></tr></tbody></table></div>`;
+  }
+
+  /* calibration */
+  let HR=0,HW=0,LR=0,LW=0;
+  res.per.forEach(p=>{ const high=p.confidence>=4; if(high){ p.correct?HR++:HW++; } else { p.correct?LR++:LW++; } });
+  const cr=res.per.filter(p=>p.correct).map(p=>p.confidence);
+  const wr=res.per.filter(p=>!p.correct).map(p=>p.confidence);
+  const avgR=avg(cr), avgW=avg(wr);
+  let verdict,vclass;
+  if(wr.length===0){ verdict=(avgR>=4)?"Confident and correct — the ideal calibration.":"Correct across the board, though confidence was modest. Trust the knowledge you clearly have."; vclass="good"; }
+  else if(cr.length===0){ verdict=(avgW>=4)?"Every missed answer was held with high confidence — the classic overconfidence trap. The breakdown below is the place to start.":"Answers were missed and held tentatively — an honest read of where the gaps are."; vclass="warn"; }
+  else { const gap=avgR-avgW;
+    if(HW>0 && avgW>=4){ verdict="Watch the overconfident misses: you were sure on questions you got wrong. That is the priority to correct."; vclass="warn"; }
+    else if(gap>=1){ verdict="Well-calibrated — you were more confident on what you got right than on what you missed."; vclass="good"; }
+    else if(gap<=-0.4){ verdict="Inverted calibration — more confidence on the misses than the hits. Worth a careful re-read below."; vclass="warn"; }
+    else { verdict="Roughly calibrated — confidence and accuracy broadly track, with room to sharpen both."; vclass="mid"; }
+  }
+  const barR = avgR!=null ? `<div class="cbar-row"><div class="cbar-lab"><span>Avg. confidence when <b>right</b></span><b>${avgR.toFixed(1)}/5</b></div><div class="cbar"><div class="cbar-fill r" data-w="${(avgR/5*100).toFixed(0)}" style="width:0"></div></div></div>` : "";
+  const barW = avgW!=null ? `<div class="cbar-row"><div class="cbar-lab"><span>Avg. confidence when <b>wrong</b></span><b>${avgW.toFixed(1)}/5</b></div><div class="cbar"><div class="cbar-fill w" data-w="${(avgW/5*100).toFixed(0)}" style="width:0"></div></div></div>` : "";
+  let deltaLine="";
+  if(pre){ const pc=avg(pre.per.map(p=>p.confidence)), qc=avg(res.per.map(p=>p.confidence)); const d=qc-pc; const ds=d>0?"+"+d.toFixed(1):d.toFixed(1);
+    deltaLine=`<div class="conf-delta">Average confidence: pre <b>${pc.toFixed(1)}</b> &rarr; post <b>${qc.toFixed(1)}</b> (<b>${ds}</b>). The deck’s goal — moving from “confidently wrong” toward “confidently right.”</div>`; }
+  const cw=res.per.map((p,i)=>({p,i})).filter(x=>!x.p.correct && x.p.confidence>=4);
+  let priority = cw.length
+    ? `<div class="priority-line"><span class="pl-h">Priority — confident but wrong</span><ul>${cw.map(x=>`<li><span class="i">!</span>${MODULES[x.i]} — answered with confidence ${x.p.confidence}/5</li>`).join("")}</ul></div>`
+    : `<div class="priority-ok">✓ No “confidently wrong” items survived to the post-test — exactly the outcome we want.</div>`;
+  const matrix=`<div class="matrix"><div class="matrix-grid">
+      <div class="mx-h"></div><div class="mx-h" style="justify-content:center">Correct</div><div class="mx-h" style="justify-content:center">Incorrect</div>
+      <div class="mx-rh">High conf.</div>
+      <div class="mx-cell ideal"><span class="n">${HR}</span><span class="l">Ideal</span></div>
+      <div class="mx-cell ${HW>0?'over':''}"><span class="n">${HW}</span><span class="l">Overconfident</span></div>
+      <div class="mx-rh">Lower conf.</div>
+      <div class="mx-cell"><span class="n">${LR}</span><span class="l">Latent strength</span></div>
+      <div class="mx-cell"><span class="n">${LW}</span><span class="l">Known gap</span></div>
+    </div></div>`;
+  const calib=`<div class="panel"><h3>Confidence Calibration</h3>
+    <div class="ph-sub">Not just what you knew — how well your certainty matched your accuracy. The compliance habit: governing your own confidence.</div>
+    <div class="calib-top">
+      <div class="calib-left">
+        <div class="calib-verdict ${vclass}">${verdict}</div>
+        ${barR}${barW}${deltaLine}
+      </div>
+      ${matrix}
+    </div>
+    ${priority}
+  </div>`;
+
+  /* full breakdown */
+  const items=res.per.map((p,i)=>{ const q=QUESTIONS[i];
+    const ans=!p.correct
+      ? `<div class="bd-ans"><span class="lab">Your answer</span><span class="yourwrong">${esc(p.chosen)}</span></div><div class="bd-ans"><span class="lab">Correct</span><span class="right">${esc(p.answer)}</span></div>`
+      : `<div class="bd-ans"><span class="lab">Correct</span><span class="right">${esc(p.answer)}</span></div>`;
+    return `<div class="bd-item ${p.correct?'correct':'wrong'}">
+      <div class="bd-top"><span class="bd-badge ${p.correct?'y':'n'}">${p.correct?'✓':'✗'}</span>
+        <span class="bd-mod">${q.module}</span><span class="bd-conf">Confidence <b>${p.confidence}</b>/5</span></div>
+      ${ans}<div class="bd-explain">${esc(q.explain)}<span class="trap"><b>Common trap:</b> ${esc(q.trap)}</span></div></div>`; }).join("");
+  const breakdown=`<div class="panel"><h3>Answer Key &amp; Explanations</h3>
+    <div class="ph-sub">The facilitator key, now revealed. Each item maps to one Day 1 module.</div>${items}</div>`;
+
+  return `${gain}${table}${calib}${breakdown}
+    <div class="res-actions no-print">
+      <button class="btn btn-primary" onclick="goHome()">&larr; Back to overview</button>
+      <button class="btn btn-ghost" onclick="printResult()">Print / Save as PDF</button>
+      <button class="btn btn-ghost" onclick="startQuiz('post')">Retake Post-Test</button>
+    </div>`;
+}
+
+/* ---------------- Keyboard + timer + init ---------------- */
+document.addEventListener("keydown",(e)=>{
+  if(state.screen!=="quiz") return;
+  const k=e.key.toLowerCase();
+  if(["a","b","c","d"].includes(k)){ selectOption({a:0,b:1,c:2,d:3}[k]); e.preventDefault(); }
+  else if(["1","2","3","4","5"].includes(k)){ setConfidence(parseInt(k)); e.preventDefault(); }
+  else if(k==="enter"||k==="arrowright"){ if(canProceed()){ state.currentQ===QUESTIONS.length-1?submitQuiz():nextQ(); } e.preventDefault(); }
+  else if(k==="arrowleft"){ if(state.currentQ>0) prevQ(); e.preventDefault(); }
+});
+setInterval(()=>{
+  if(state.screen==="quiz" && state.quizStart){
+    const el=document.getElementById("timer");
+    if(el) el.textContent=fmtTime(Math.floor((Date.now()-state.quizStart)/1000));
+  }
+},1000);
+
+(async function init(){ appResults=await loadResults(); render(); })();
+</script>
+</body>
+</html>
